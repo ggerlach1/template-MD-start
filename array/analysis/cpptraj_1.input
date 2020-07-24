@@ -1,0 +1,37 @@
+# topology file
+parm ../xxxBASExxx.parm7
+
+# simulation coordinates
+#trajin ../nc/xxxBASExxx_heat1.nc
+#trajin ../nc/xxxBASExxx_heat2.nc
+#trajin ../nc/xxxBASExxx_heat3.nc
+#trajin ../nc/xxxBASExxx_heat4.nc
+#trajin ../nc/xxxBASExxx_heat5.nc
+#trajin ../nc/xxxBASExxx_0ns.nc  1 last 2
+trajin ../nc/xxxBASExxx_0ns.nc  lastframe
+
+trajin ../nc/xxxBASExxx_60ns_1.nc  1 last 1
+trajin ../nc/xxxBASExxx_120ns_1.nc  1 last 1
+trajin ../nc/xxxBASExxx_180ns_1.nc  1 last 1
+trajin ../nc/xxxBASExxx_240ns_1.nc  1 last 1
+trajin ../nc/xxxBASExxx_300ns_1.nc  1 last 1
+
+
+## remove elements
+strip :Na+
+strip :Cl-
+strip :WAT
+
+# automatic re-image coordinates
+autoimage @CA,C,N,O
+
+# aling it
+symmrmsd @CA,C,O,N out symmrmsd_1.out 
+secstruct out secstruct_1.out
+
+# write trajectory
+trajout ../nc/xxxBASExxx_stripped_1.nc
+trajout ../nc/xxxBASExxx_stripped_1.pdb
+trajout ../nc/xxxBASExxx_stipped_steps_1.pdb offset 2
+# execute everything
+run

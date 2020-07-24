@@ -1,0 +1,35 @@
+#!/usr/bin/env tleap
+
+# force field
+source leaprc.protein.ff14SB
+
+# water model
+source leaprc.water.tip3p
+
+
+
+set default PdbWriteCharges on
+
+# system
+chip = loadPDB starting_structure.pdb
+
+#make any disulfide bonds
+#bond chip.587.SG chip.432.SG
+
+savepdb chip dm_1.pdb
+saveAmberParm chip dm_1_nowat.parm7 dm_1_nowat.rst7
+
+
+# box 15 A far away
+solvateOct chip TIP3PBOX 15.0 0.75
+
+#xxxIONIZINGxxx
+
+#check chip
+
+# save topology files
+saveAmberParm chip dm_1.parm7 rst/dm_1.rst7
+savepdb chip dm_1.solv.pdb
+
+# quit
+quit
