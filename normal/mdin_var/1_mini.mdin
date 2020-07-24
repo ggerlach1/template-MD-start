@@ -1,0 +1,21 @@
+Minimization water 
+&cntrl
+    ! Minimization options
+    imin=1,       ! Turn on minimization
+    maxcyc=8000,  ! Maximum number of minimization cycles, 2K
+    ncyc=3000,    ! 1.5K steepest-descent steps, better for strained systems
+
+    ! Potential energy function options
+    cut=10.0,       ! nonbonded cutoff, in Angstroms
+    iwrap=0,       ! If iwrap = 1, the coordinates written to the restart and trajectory files will be "wrapped"
+                   ! into a primary box.
+    ! NO SHAKE
+    ntf=1,         ! NOT DO calculate forces of bonds containing hydrogen
+
+    ntb=1,         ! Use periodic boundary conditions with constant volume
+
+    ! Restraint options
+    ntr=1,          ! Positional restraints for proteins, sugars, and ligands
+    restraint_wt=50,
+    restraintmask=':1-xxxPROTEIN_LENGTHxxx@CA,C,O,N',    
+ /

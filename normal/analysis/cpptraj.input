@@ -1,0 +1,63 @@
+# topology file
+parm ../xxxBASExxx.parm7
+
+# simulation coordinates
+#trajin ../nc/xxxBASExxx_heat1.nc
+#trajin ../nc/xxxBASExxx_heat2.nc
+#trajin ../nc/xxxBASExxx_heat3.nc
+#trajin ../nc/xxxBASExxx_heat4.nc
+#trajin ../nc/xxxBASExxx_heat5.nc
+#trajin ../nc/xxxBASExxx_0ns.nc  1 last 2
+trajin ../nc/xxxBASExxx_0ns.nc  lastframe
+
+trajin ../nc/xxxBASExxx_10ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_20ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_30ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_40ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_50ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_60ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_70ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_80ns.nc  1 last 1
+trajin ../nc/xxxBASExxx_90ns.nc  1 last 1
+
+trajin ../nc/xxxBASExxx_100ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_110ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_120ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_130ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_140ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_150ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_160ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_170ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_180ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_190ns.nc 1 last 1
+
+trajin ../nc/xxxBASExxx_200ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_210ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_220ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_230ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_240ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_250ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_260ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_270ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_280ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_290ns.nc 1 last 1
+trajin ../nc/xxxBASExxx_300ns.nc 1 last 1
+
+
+## remove elements
+strip :Na+
+strip :Cl-
+strip :WAT
+
+# automatic re-image coordinates
+autoimage @CA,C,N,O
+
+# aling it
+symmrmsd @CA,C,O,N 
+
+# write trajectory
+trajout ../nc/xxxBASExxx_stripped.nc
+trajout ../nc/xxxBASExxx_stripped.pdb
+trajout ../nc/xxxBASExxx_stipped_steps.pdb offset 2
+# execute everything
+run
