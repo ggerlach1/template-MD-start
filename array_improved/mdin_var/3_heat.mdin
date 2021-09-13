@@ -1,0 +1,47 @@
+equilibrium NPT 2ps
+ &cntrl
+    imin=0,        ! No minimization
+    irest=1,       ! This IS a restart of an old MD simulation
+    ntx=5,         ! So our inpcrd file has velocities
+
+    ! Temperature control
+    ntt=3,         ! 
+    gamma_ln=1,    ! Friction coefficient (ps^-1)
+    tempi=300,     ! initial temperature
+    temp0=300,     ! Target temperature
+    ig=-1,
+
+    ! Potential energy control
+    cut=10.0,       ! nonbonded cutoff, in Angstroms
+
+    ! MD settings
+    nstlim=2000,   ! 2k steps, 2ps total
+    dt=0.001,      ! time step (ps)
+
+    ! SHAKE
+    ntc=2,         ! Constrain bonds containing hydrogen
+    ntf=2,         ! Do not calculate forces of bonds containing hydrogen
+
+    ! Control how often information is printed
+    ntpr=2000,     ! Print energies every 2000 steps
+    ntwx=2000,   ! Print coordinates every 0.5M steps to the trajectory
+    ntwr=2000,   ! Print a restart file every 100K steps (can be less frequent)
+    ntxo=2,        ! Write NetCDF format
+    ioutfm=1,      ! Write NetCDF format (always do this!)
+
+    ! Wrap coordinates when printing them to the same unit cell
+    iwrap=0,
+    
+    ! Constant pressure control.
+    ntp=1,         ! 1=isotropic, 2=anisotropic, 3=semi-isotropic w/ surften
+    barostat=1     ! beren
+    pres0=1.0,     ! Target external pressure, in bar
+    taup=5.0,
+    ntb=2,         ! Use periodic boundary conditions with constant pressure
+    !nmropt=1,      ! NMR restraints and weight changes will be read.
+
+    ! Restraint options
+    ntr=1,          ! Positional restraints for proteins, sugars, and ligands
+    restraint_wt=5,
+    restraintmask=':1-xxxPROTEIN_LENGTHxxx',    
+&end

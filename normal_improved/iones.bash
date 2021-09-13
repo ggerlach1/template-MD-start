@@ -1,9 +1,9 @@
-#!/usr/bin/bash
+#!/bin/bash
 
-if [[ $# != 1 ]]; then
-    echo Wrong parameter number
-    exit 1
-fi
+# if [[ $# != 1 ]]; then
+#     echo Wrong parameter number
+#     exit 1
+# fi
 
 # name of system (pdb file name)
 SYSTEM=$1
@@ -15,7 +15,7 @@ CONCENTRATION=150
 BOXEDGE=1.5
 
 # Simple cubic box length (nm):
-BOXLENGHT=$(cat tleap.output | awk '/Volume/{print ($2**(0.333))*0.1 }' )
+BOXLENGHT=$(cat tleap.output | awk '/Volume/{print ($2^(0.333))*0.1 }' )
 
 # Net charge of solutes (proton charge units). The value by default is 0
 CHARGE=$(cat tleap.output | perl -ane 'if( /unperturbed charge/) { /(-?\d+\.?\d+?)/ && print $1}')

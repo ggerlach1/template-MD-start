@@ -14,8 +14,9 @@
 #SBATCH --partition=dept_gpu
 ##SBATCH --partition=camacho_gpu
 #SBATCH --mail-type=NONE
-#SBATCH --error=sbatch.%A.stderr
-#SBATCH --output=sbatch.%A.stdout
+#SBATCH --error=sbatch_array.%A_%a.stderr
+#SBATCH --output=sbatch_array.%A_%a.stdout
+#SBATCH --array=1-xxxTASKSxxx
 
 #----PARAMETERS------------------------------------------------------------
 
@@ -60,12 +61,13 @@ do
 	if ([[ ! ${i} == 0 ]]);  then INITCOOR=${SYSTEM_ARRAY[$((i-1))]}; else INITCOOR=${INIT};            fi
 	ISTEP=${SYSTEM_ARRAY[$i]}
 				
-	rsync -av \
-		  ${SLURM_SUBMIT_DIR}/mdin/${INPUT}.mdin    \
-		  ${SLURM_SUBMIT_DIR}/${INIT}.parm7    \
-		  ${SLURM_SUBMIT_DIR}/rst/${INITCOOR}.rst7 \
-		  ${SLURM_SUBMIT_DIR}/analysis/cpptraj.input \
-		  ${SCRATCH_DIR}
+rsync -av \
+      ${SLURM_SUBMIT_DIR}/mdin/${INPUT}.mdin    \
+      ${SLURM_SUBMIT_DIR}/${INIT}_${SLURM_ARRAY_TASK_ID}.parm7    \
+      ${SLURM_SUBMIT_DIR}/rst/${INITCOOR}_${SLURM_ARRAY_TASK_ID}.rst7 \
+	  ${SLURM_SUBMIT_DIR}/cmds.txt \
+	  ${SLURM_SUBMIT_DIR}/analysis/cpptraj.input \
+	  ${SCRATCH_DIR}
 
 	# Write cpptraj for stripping later 
 	if ([[   ${i} -gt 7 ]])
@@ -73,37 +75,30 @@ do
 		for ((j=1; j<$((NUM_STEPS-6)); j++))
 		do
     		OUTPUT_NUM=$((j*${STEP_SIZE}))
-			LINE="trajin ../nc/${SYSTEM}_${OUTPUT_NUM}ns.nc 1 last 1"
+			LINE="trajin ../nc/${SLURM_JOB_NAME}_${OUTPUT_NUM}ns_${SLURM_ARRAY_TASK_ID}.nc 1 last 1"
 			sed -i "/LINE/i ${LINE}" cpptraj.input 
 		done
-		sed -i "s/xxxBASExxx/${SYSTEM}/g" cpptraj.input
+		sed -i "s/xxxBASExxx/${SLURM_JOB_NAME}/g" cpptraj.input
 	fi
 	
 	# executable of gpu amber
-	pmemd.cuda -O  \
-			   -i   ${INPUT}.mdin \
-			   -o   ${ISTEP}.mdout \
-			   -p   ${INIT}.parm7  \
-			   -c   ${INITCOOR}.rst7 \
-			   -r   ${ISTEP}.rst7 \
-			   -x   ${ISTEP}.nc \
-			   -inf ${ISTEP}.mdinfo \
-			   -ref ${INITCOOR}.rst7 > ${ISTEP}.amber.out
-	echo  "*******************"      >> ${ISTEP}.amber.out
-	echo  ${SCRATCH_DIR}             >> ${ISTEP}.amber.out
+	cmd=`sed -n "${SLURM_ARRAY_TASK_ID}p" cmds.txt`
+	eval $cmd
+	echo  "*******************"      
+	echo  ${SCRATCH_DIR}             
 	squeue  --format "%.18i %.9P %.50j %.8u %.2t %.10M %.6D %.6C %R" | \
-		grep gjg21 | grep -P '(R|Prio)'  | nl >> ${ISTEP}.amber.out
+		grep gjg21 | grep -P '(R|Prio)'  | nl 
 
 	# copy partial results
     echo 'copying files'
     rsync -av ${SCRATCH_DIR}/${INPUT}.mdin ${SLURM_SUBMIT_DIR}/mdin
-    rsync -av ${SCRATCH_DIR}/${ISTEP}.mdout ${SLURM_SUBMIT_DIR}/mdout
-    rsync -av ${SCRATCH_DIR}/${INIT}.parm7 ${SLURM_SUBMIT_DIR}
-    rsync -av ${SCRATCH_DIR}/${INITCOOR}.rst7 ${SLURM_SUBMIT_DIR}/rst
-    rsync -av ${SCRATCH_DIR}/${ISTEP}.rst7 ${SLURM_SUBMIT_DIR}/rst
-    rsync -av ${SCRATCH_DIR}/${ISTEP}.nc ${SLURM_SUBMIT_DIR}/nc
-    rsync -av ${SCRATCH_DIR}/${ISTEP}.mdinfo ${SLURM_SUBMIT_DIR}/mdinfo
-    rsync -av ${SCRATCH_DIR}/${ISTEP}.amber.out ${SLURM_SUBMIT_DIR}/mdout
+    rsync -av ${SCRATCH_DIR}/${ISTEP}_${SLURM_ARRAY_TASK_ID}.mdout ${SLURM_SUBMIT_DIR}/mdout
+    rsync -av ${SCRATCH_DIR}/${INIT}_${SLURM_ARRAY_TASK_ID}.parm7 ${SLURM_SUBMIT_DIR}
+    rsync -av ${SCRATCH_DIR}/${INITCOOR}_${SLURM_ARRAY_TASK_ID}.rst7 ${SLURM_SUBMIT_DIR}/rst
+    rsync -av ${SCRATCH_DIR}/${ISTEP}_${SLURM_ARRAY_TASK_ID}.rst7 ${SLURM_SUBMIT_DIR}/rst
+    rsync -av ${SCRATCH_DIR}/${ISTEP}_${SLURM_ARRAY_TASK_ID}.nc ${SLURM_SUBMIT_DIR}/nc
+    rsync -av ${SCRATCH_DIR}/${ISTEP}_${SLURM_ARRAY_TASK_ID}.mdinfo ${SLURM_SUBMIT_DIR}/mdinfo
+    rsync -av ${SCRATCH_DIR}/${ISTEP}_${SLURM_ARRAY_TASK_ID}.amber.out ${SLURM_SUBMIT_DIR}/mdout
     rsync -av ${SCRATCH_DIR}/cpptraj.input ${SLURM_SUBMIT_DIR}/analysis/cpptraj_long.input
 
 	

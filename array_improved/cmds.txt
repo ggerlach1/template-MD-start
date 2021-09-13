@@ -1,0 +1,6 @@
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_1.mdout  -p  ${INIT}_1.parm7  -c ${INITCOOR}_1.rst7 -r ${ISTEP}_1.rst7 -x ${ISTEP}_1.nc -inf ${ISTEP}_1.mdinfo -ref ${INITCOOR}_1.rst7 > ${ISTEP}_1.amber.out
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_2.mdout  -p  ${INIT}_2.parm7  -c ${INITCOOR}_2.rst7 -r ${ISTEP}_2.rst7 -x ${ISTEP}_2.nc -inf ${ISTEP}_2.mdinfo -ref ${INITCOOR}_2.rst7 > ${ISTEP}_2.amber.out
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_3.mdout  -p  ${INIT}_3.parm7  -c ${INITCOOR}_3.rst7 -r ${ISTEP}_3.rst7 -x ${ISTEP}_3.nc -inf ${ISTEP}_3.mdinfo -ref ${INITCOOR}_3.rst7 > ${ISTEP}_3.amber.out
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_4.mdout  -p  ${INIT}_4.parm7  -c ${INITCOOR}_4.rst7 -r ${ISTEP}_4.rst7 -x ${ISTEP}_4.nc -inf ${ISTEP}_4.mdinfo -ref ${INITCOOR}_4.rst7 > ${ISTEP}_4.amber.out
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_5.mdout  -p  ${INIT}_5.parm7  -c ${INITCOOR}_5.rst7 -r ${ISTEP}_5.rst7 -x ${ISTEP}_5.nc -inf ${ISTEP}_5.mdinfo -ref ${INITCOOR}_5.rst7 > ${ISTEP}_5.amber.out
+pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}_6.mdout  -p  ${INIT}_6.parm7  -c ${INITCOOR}_6.rst7 -r ${ISTEP}_6.rst7 -x ${ISTEP}_6.nc -inf ${ISTEP}_6.mdinfo -ref ${INITCOOR}_6.rst7 > ${ISTEP}_6.amber.out
