@@ -6,7 +6,11 @@ source leaprc.protein.ff14SB
 # water model
 source leaprc.water.tip3p
 
-
+# add other parameters 
+#loadamberparams frcmod_s2p
+#loadoff s2p.off
+#loadamberparams frcmod_y2p
+#loadoff Y2P.off
 
 set default PdbWriteCharges on
 
@@ -16,8 +20,8 @@ chip = loadPDB starting_structure.pdb
 #make any disulfide bonds
 #bond chip.587.SG chip.432.SG
 
-savepdb chip dm_1.pdb
-saveAmberParm chip dm_1_nowat.parm7 dm_1_nowat.rst7
+savepdb chip xxxBASExxx_tleap.pdb
+saveAmberParm chip xxxBASExxx_nowat.parm7 xxxBASExxx_nowat.rst7
 
 
 # box 15 A far away
@@ -28,8 +32,8 @@ solvateOct chip TIP3PBOX 15.0 0.75
 #check chip
 
 # save topology files
-saveAmberParm chip dm_1.parm7 rst/dm_1.rst7
-savepdb chip dm_1.solv.pdb
+saveAmberParm chip xxxBASExxx.parm7 rst/xxxBASExxx.rst7
+savepdb chip xxxBASExxx.solv.pdb
 
 # quit
 quit

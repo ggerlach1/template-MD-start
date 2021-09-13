@@ -10,12 +10,8 @@ parm ../xxxBASExxx.parm7
 #trajin ../nc/xxxBASExxx_0ns.nc  1 last 2
 trajin ../nc/xxxBASExxx_0ns.nc  lastframe
 
-trajin ../nc/xxxBASExxx_60ns_1.nc  1 last 1
-trajin ../nc/xxxBASExxx_120ns_1.nc  1 last 1
-trajin ../nc/xxxBASExxx_180ns_1.nc  1 last 1
-trajin ../nc/xxxBASExxx_240ns_1.nc  1 last 1
-trajin ../nc/xxxBASExxx_300ns_1.nc  1 last 1
 
+##ADD LINES
 
 ## remove elements
 strip :Na+

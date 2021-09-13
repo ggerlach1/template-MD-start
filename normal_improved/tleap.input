@@ -2,6 +2,8 @@
 
 # force field
 source leaprc.protein.ff14SB
+## LPS frcmod from paper: https://pubs.acs.org/doi/full/10.1021/ct300613v
+# loadamberparams lps.mod.frcmod
 
 # water model
 source leaprc.water.tip3p
@@ -16,6 +18,11 @@ set default PdbWriteCharges on
 
 # system
 chip = loadPDB starting_structure.pdb
+
+# To run simulation of ligand
+# receptor  = loadpdb lps_complex.min.ini.pdb
+# ligand    = loadmol2 lps.mod.mol2 #can be generated from: https://ambermd.org/tutorials/basic/tutorial4b/index.php
+# chip      = combine {receptor ligand}
 
 #make any disulfide bonds
 #bond chip.587.SG chip.432.SG

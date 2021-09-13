@@ -19,7 +19,7 @@ A NPT production
     
 
     ! MD settings
-    nstlim=30000000, ! 30M steps, 60 ns total
+    nstlim=50000000, ! 50M steps,100 ns total
     dt=0.002,        ! time step (ps)
 
     ! SHAKE

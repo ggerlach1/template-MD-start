@@ -1,9 +1,9 @@
 #!/bin/bash
 
-BASE_NAME=slide2 #CHANGE THIS 
-PROTEIN_LENGTH=15 #CHANGE THIS 
+BASE_NAME=xxxBASE_FROMxxx #CHANGE THIS 
+PROTEIN_LENGTH=xxxLENGTHxxx #CHANGE THIS 
 RESTART=0
-NUM_STEPS=13 #This gives slurm files for 0-360 ns and submitts the minimization and equilibration as dependencies but not the producttion runs
+NUM_STEPS=14 #This gives slurm files for 0-600 ns and submits the minimization to equilibration as dependencies but not the producttion runs
         # 300ns + equilibrium + minimization + heat
                     # in ARRAY_EXIT:
                     # index = 0; minimization water
@@ -13,7 +13,7 @@ NUM_STEPS=13 #This gives slurm files for 0-360 ns and submitts the minimization 
                     # index = 4; heat prot
 		    # index = 5; heat sys
 		    # index = 6; heat sys to 300, density equilibrium
-                    # index = 7; production   10ns...
+                    # index = 7; production   60ns...
 #QUEUE=dept_gpu I have been submitting to dept_gpu and camacho_gpu in a list in amber.slurm
 #QUEUE=any_gpu
 #QUEUE=camacho_gpu
@@ -29,9 +29,15 @@ sed "s/xxxPROTEIN_LENGTHxxx/${PROTEIN_LENGTH}/g" mdin_var/4_heat.mdin > mdin/4_h
 sed "s/xxxPROTEIN_LENGTHxxx/${PROTEIN_LENGTH}/g" mdin_var/5_heat.mdin > mdin/5_heat.mdin
 
 # Write cpptraj for stripping later 
-sed -i "s/xxxBASExxx/${BASE_NAME}/g" analysis/cpptraj_1.input
-sed -i "s/xxxBASExxx/${BASE_NAME}/g" analysis/cpptraj_2.input
-sed -i "s/xxxBASExxx/${BASE_NAME}/g" analysis/cpptraj_3.input
+for ((j=1; j<4;j++))
+	do
+	for ((i=1; i<$((NUM_STEPS-7)); i++))
+	do
+	    OUTPUT_NUM=$((i*100))
+		LINE="trajin ../nc/${BASE_NAME}_${OUTPUT_NUM}ns_${j}.nc 1 last 1"
+		sed -i "/LINES/i ${LINE}" analysis/cpptraj_${j}.input 
+	done
+done
 
 
 # minimization system, NVT
@@ -114,22 +120,22 @@ ARRAY_SLURM[6]=${BASE_NAME}_0ns.slurm
 
 
 # step 1
-sed -e "s/xxxBASExxx/${BASE_NAME}_60ns/"  \
+sed -e "s/xxxBASExxx/${BASE_NAME}_100ns/"  \
     -e "s/xxxNAMExxx/${BASE_NAME}/"       \
     -e "s/xxxQUEUExxx/${QUEUE}/"          \
     -e "s/xxxSYSTEMxxx/${BASE_NAME}/"     \
-    -e "s/xxxISTEPxxx/${BASE_NAME}_60ns/"  \
+    -e "s/xxxISTEPxxx/${BASE_NAME}_100ns/"  \
     -e "s/xxxINPUTxxx/8_prod/"        \
     -e "s/xxxINITCOORxxx/${BASE_NAME}_0ns/" \
-    ${SLURM_NAME_FILE0} > ${BASE_NAME}_60ns.slurm
-ARRAY_SLURM[7]=${BASE_NAME}_60ns.slurm
+    ${SLURM_NAME_FILE0} > ${BASE_NAME}_100ns.slurm
+ARRAY_SLURM[7]=${BASE_NAME}_100ns.slurm
 
 
 # production, NPT
 for ((i=2; i<$((NUM_STEPS-7)); i++))
 do
-    INPUT_NUM=$((i*60-60))
-    OUTPUT_NUM=$((i*60))
+    INPUT_NUM=$((i*100-100))
+    OUTPUT_NUM=$((i*100))
     SYSTEM_NAME=${BASE_NAME}_${OUTPUT_NUM}ns
 
     sed -e "s/xxxBASExxx/${SYSTEM_NAME}/"     \
@@ -160,7 +166,7 @@ echo "****${ARRAY_EXIT[$INIT]}****"
 
 # heat, quilibrium, production
 # the 2nd, 3rd, ...
-for ((i=$((INIT+1)); i<7; i++))
+for ((i=$((INIT+1)); i<11; i++))
 do
     ARRAY_EXIT[$i]=$(sbatch --dependency=afterok:$(echo ${ARRAY_EXIT[$((i-1))]} | awk '{print $NF}') \
                             ${ARRAY_SLURM[$i]} )

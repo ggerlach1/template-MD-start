@@ -26,6 +26,7 @@ if [[ ! -e ${SCRATCH_DIR} ]]; then
     mkdir -p ${SCRATCH_DIR} && echo "scratch drive ${SCRATCH_DIR}"
 fi
 
+echo $SLURMD_NODENAME
 # change to scratch directory so job runs locally isntead of over the network
 # (slows everyone down)
 cd ${SCRATCH_DIR}
@@ -63,7 +64,7 @@ clean_up(){
 }
 
 #----FOR RUNNING AMBER--------------------------------------------------
-module load amber/18
+module load amber/20
 
 cmd=`sed -n "${SLURM_ARRAY_TASK_ID}p" cmds.txt`
 eval $cmd

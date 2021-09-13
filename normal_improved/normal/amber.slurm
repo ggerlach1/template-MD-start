@@ -49,7 +49,7 @@ trap clean_up EXIT
 #define clean_up
 clean_up(){
     echo 'copying files'
-    rsync -av ${SCRATCH_DIR}/${INPUT}.mdin ${SLURM_SUBMIT_DIR}/mdin
+    rsync -av ${SCRATCH_DIR}/${INPUT}.mdin ${SLURM_SUBMIT_DIR}
     rsync -av ${SCRATCH_DIR}/${ISTEP}.mdout ${SLURM_SUBMIT_DIR}/mdout
     rsync -av ${SCRATCH_DIR}/${INIT}.parm7 ${SLURM_SUBMIT_DIR}
     rsync -av ${SCRATCH_DIR}/${INITCOOR}.rst7 ${SLURM_SUBMIT_DIR}/rst
@@ -60,7 +60,7 @@ clean_up(){
 }
 
 #----FOR RUNNING AMBER--------------------------------------------------
-module load amber/20
+module load amber/18
 
 # executable of gpu amber
 pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}.mdout  -p  ${INIT}.parm7  -c ${INITCOOR}.rst7 -r ${ISTEP}.rst7 -x ${ISTEP}.nc -inf ${ISTEP}.mdinfo -ref ${INITCOOR}.rst7 > ${ISTEP}.amber.out

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-BASE_NAME=xxxBASE_FROMxxx #CHANGE THIS 
-PROTEIN_LENGTH=xxxLENGTHxxx #CHANGE THIS 
+BASE_NAME=linker #CHANGE THIS 
+PROTEIN_LENGTH=23 #CHANGE THIS 
 RESTART=0
-NUM_STEPS=13        # 300ns + equilibrium + minimization + heat
+NUM_STEPS=37        # 300ns + equilibrium + minimization + heat
                     # in ARRAY_EXIT:
                     # index = 0; minimization water
                     # index = 1; minimization prot(backbone)
@@ -26,13 +26,7 @@ sed "s/xxxPROTEIN_LENGTHxxx/${PROTEIN_LENGTH}/g" mdin_var/4_heat.mdin > mdin/4_h
 sed "s/xxxPROTEIN_LENGTHxxx/${PROTEIN_LENGTH}/g" mdin_var/5_heat.mdin > mdin/5_heat.mdin
 
 # Write cpptraj for stripping later 
-for ((i=1; i<$((NUM_STEPS-6)); i++))
-do
-    OUTPUT_NUM=$((i*50))
-	LINE="trajin ../nc/xxxBASExxx_${OUTPUT_NUM}ns.nc 1 last 1"
-	sed "/LINES/i ${LINE}" analysis/cpptraj.input > analysis/cpptraj_long.input
-done
-sed -i "s/xxxBASExxx/${BASE_NAME}/g" analysis/cpptraj_long.input
+sed -i "s/xxxBASExxx/${BASE_NAME}/g" analysis/cpptraj.input
 
 
 # minimization system, NVT
@@ -116,8 +110,8 @@ ARRAY_SLURM[6]=${BASE_NAME}_0ns.slurm
 # production, NPT
 for ((i=1; i<$((NUM_STEPS-6)); i++))
 do
-    INPUT_NUM=$((i*50-50))
-    OUTPUT_NUM=$((i*50))
+    INPUT_NUM=$((i*10-10))
+    OUTPUT_NUM=$((i*10))
     SYSTEM_NAME=${BASE_NAME}_${OUTPUT_NUM}ns
 
     sed -e "s/xxxBASExxx/${SYSTEM_NAME}/"     \

@@ -24,6 +24,8 @@ if [[ ! -e ${SCRATCH_DIR} ]]; then
     mkdir -p ${SCRATCH_DIR} && echo "scratch drive ${SCRATCH_DIR}"
 fi
 
+echo $SLURMD_NODENAME
+
 # change to scratch directory so job runs locally isntead of over the network
 # (slows everyone down)
 cd ${SCRATCH_DIR}
@@ -60,7 +62,7 @@ clean_up(){
 }
 
 #----FOR RUNNING AMBER--------------------------------------------------
-module load amber/18
+module load amber/20
 
 # executable of gpu amber
 pmemd.cuda -O  -i ${INPUT}.mdin -o ${ISTEP}.mdout  -p  ${INIT}.parm7  -c ${INITCOOR}.rst7 -r ${ISTEP}.rst7 -x ${ISTEP}.nc -inf ${ISTEP}.mdinfo -ref ${INITCOOR}.rst7 > ${ISTEP}.amber.out
