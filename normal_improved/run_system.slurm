@@ -70,13 +70,13 @@ do
 	# Write cpptraj for stripping later 
 	if ([[   ${i} -gt 7 ]])
 	then
-		for ((j=1; j<$((NUM_STEPS-6)); j++))
+		for ((j=1; j<$i; j++))
 		do
     		OUTPUT_NUM=$((j*${STEP_SIZE}))
 			LINE="trajin ../nc/${SYSTEM}_${OUTPUT_NUM}ns.nc 1 last 1"
 			sed -i "/LINE/i ${LINE}" cpptraj.input 
 		done
-		sed -i "s/xxxBASExxx/${SYSTEM}/g" cpptraj.input
+		sed -i "s/xxxNAMExxx/${SYSTEM}/g" cpptraj.input
 	fi
 	
 	# executable of gpu amber
